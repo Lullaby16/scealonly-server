@@ -1,29 +1,32 @@
 CREATE DATABASE sosmed;
 
 CREATE TABLE users(
-    user_id SERIAL PRIMARY KEY,
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     email VARCHAR NOT NULL UNIQUE,
     username VARCHAR(28) NOT NULL UNIQUE,
-    passhash VARCHAR NOT NULL
+    passhash VARCHAR NOT NULL,
+    status VARCHAR NOT NULL DEFAULT 'normal',
+    role VARCHAR NOT NULL DEFAULT 'user',
+    verified BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE posts(
-    post_id SERIAL PRIMARY KEY,
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     view INTEGER NOT NULL,
     upvote INTEGER NOT NULL,
     downvote INTEGER NOT NULL,
-    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE comments(
-    comment_id SERIAL PRIMARY KEY,
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     comment TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-    post_id INTEGER NOT NULL REFERENCES posts(post_id) ON DELETE CASCADE
+    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    post_id uuid NOT NULL REFERENCES posts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE posts_viewCount(

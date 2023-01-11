@@ -2,7 +2,7 @@ const Yup = require("yup");
 
 const commentSchema = Yup.object({
   comment: Yup.string().required("Comment required"),
-  post_id: Yup.number().required("ID required"),
+  post_id: Yup.string().required("ID required"),
 });
 
 const validateComment = (req, res, next) => {

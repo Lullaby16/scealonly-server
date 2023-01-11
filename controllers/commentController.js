@@ -38,7 +38,7 @@ module.exports.getComment = async (req, res) => {
 
   if (token) {
     const comments = await pool.query(
-      "SELECT u.username, u.user_id, c.comment_id, c.comment, c.created_at from users u INNER JOIN comments c ON u.user_id = c.user_id WHERE c.post_id = $1 ORDER BY c.comment_id DESC LIMIT 5 OFFSET $2",
+      "SELECT u.username, u.id, c.id, c.user_id, c.comment, c.created_at from users u INNER JOIN comments c ON u.id = c.user_id WHERE c.post_id = $1 ORDER BY c.id DESC LIMIT 5 OFFSET $2",
       [id, cursor]
     );
     res.send({ cursor: cursor * 1 + 5, posts: comments.rows });
@@ -57,7 +57,7 @@ module.exports.getTotalComment = async (req, res) => {
 
   if (token) {
     const comments = await pool.query(
-      "SELECT u.user_id, c.comment_id from users u INNER JOIN comments c ON u.user_id = c.user_id WHERE c.post_id = $1",
+      "SELECT u.id, c.id from users u INNER JOIN comments c ON u.id = c.user_id WHERE c.post_id = $1",
       [id]
     );
     res.send(comments.rows);
@@ -78,7 +78,7 @@ module.exports.updateComment = async (req, res) => {
 
   if (token) {
     await pool.query(
-      "UPDATE comments SET comment = $1 WHERE comment_id = $2 AND user_id = $3",
+      "UPDATE comments SET comment = $1 WHERE id = $2 AND user_id = $3",
       [comment, comment_id, user_id]
     );
     console.log("berhasil");
@@ -98,10 +98,10 @@ module.exports.deleteComment = async (req, res) => {
     return res.status(401).json({ loggedIn: false, status: "Not logged in!" });
 
   if (token) {
-    await pool.query(
-      "DELETE from comments WHERE comment_id = $1 AND user_id = $2",
-      [comment_id, user_id]
-    );
+    await pool.query("DELETE from comments WHERE id = $1 AND user_id = $2", [
+      comment_id,
+      user_id,
+    ]);
     return res.status(200).send("comment has been deleted");
   } else {
     return res.status(422).json("Something went wrong");

@@ -15,7 +15,7 @@ module.exports.handleLogin = (req, res) => {
 module.exports.attemptLogin = async (req, res) => {
   //checking user
   const potentialLogin = await pool.query(
-    "SELECT user_id, username, passhash, verified FROM users u  WHERE u.username=$1",
+    "SELECT id, username, passhash, verified FROM users WHERE username=$1",
     [req.body.username]
   );
 
@@ -35,7 +35,7 @@ module.exports.attemptLogin = async (req, res) => {
         //login
         req.session.user = {
           username: req.body.username,
-          user_id: potentialLogin.rows[0].user_id,
+          user_id: potentialLogin.rows[0].id,
         };
         res.json({ loggedIn: true, username: req.body.username });
       } else {
@@ -62,18 +62,18 @@ module.exports.attemptRegister = async (req, res) => {
     //register
     const hashedPass = await bcrypt.hash(req.body.password, 10);
     const newUserQuery = await pool.query(
-      "INSERT INTO users(email, username, passhash) values($1,$2,$3) RETURNING user_id, username",
+      "INSERT INTO users(email, username, passhash) values($1,$2,$3) RETURNING id, username",
       [req.body.email, req.body.username, hashedPass]
     );
     req.session.user = {
       username: req.body.username,
-      user_id: newUserQuery.rows[0].user_id,
+      user_id: newUserQuery.rows[0].id,
     };
 
     try {
-      const uniqueString = uuidv4();
+      //const uniqueString = uuidv4();
       const token = req.session.user.user_id;
-      const url = `http://localhost:4000/auth/verify/${token + uniqueString}`;
+      const url = `http://localhost:4000/auth/verify/${token}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -102,13 +102,11 @@ module.exports.attemptRegister = async (req, res) => {
 };
 
 module.exports.verifyEmail = async (req, res) => {
-  const param = req.params.token;
-  const id = param.slice(0, 2);
+  const id = req.params.token;
+  //const id = param.slice(0, 2);
 
   try {
-    await pool.query("UPDATE users set verified = true WHERE user_id = $1", [
-      id,
-    ]);
+    await pool.query("UPDATE users set verified = true WHERE id = $1", [id]);
 
     res.redirect("http://localhost:3000/login");
   } catch (error) {
