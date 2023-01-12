@@ -11,7 +11,7 @@ module.exports.getPosts = async (req, res) => {
 
   if (token) {
     const posts = await pool.query(
-      "SELECT u.username, p.id, p.user_id, p.title, p.content, p.created_at, p.view from users u INNER JOIN posts p ON u.id = p.user_id ORDER BY p.created_at DESC LIMIT 5 OFFSET $1",
+      "SELECT u.username, p.id, p.public_id, p.user_id, p.title, p.content, p.created_at, p.view from users u INNER JOIN posts p ON u.id = p.user_id ORDER BY p.created_at DESC LIMIT 5 OFFSET $1",
       [cursor]
     );
     res.send({ cursor: cursor * 1 + 5, posts: posts.rows });
@@ -29,7 +29,7 @@ module.exports.getMyPosts = async (req, res) => {
 
   if (token) {
     const posts = await pool.query(
-      "SELECT u.username, p.id, p.user_id, p.title, p.content, p.view, p.created_at FROM users u INNER JOIN posts p ON u.id = p.user_id WHERE p.user_id = $1 ORDER BY p.id DESC LIMIT 5 OFFSET $2",
+      "SELECT u.username, p.id, p.public_id, p.user_id, p.title, p.content, p.view, p.created_at FROM users u INNER JOIN posts p ON u.id = p.user_id WHERE p.user_id = $1 ORDER BY p.id DESC LIMIT 5 OFFSET $2",
       [req.session.user.user_id, cursor]
     );
     res.send({ cursor: cursor * 1 + 5, posts: posts.rows });
@@ -42,12 +42,13 @@ module.exports.searchPost = async (req, res) => {
   //checking user log in
   const token = req.session.user;
   const id = req.query.id;
+
   if (!token)
     return res.status(401).json({ loggedIn: false, status: "Not logged in!" });
 
   if (token) {
     const posts = await pool.query(
-      "SELECT u.username, p.id, p.user_id, p.title, p.content, p.view, p.created_at FROM users u INNER JOIN posts p ON u.id = p.user_id WHERE p.id = $1",
+      "SELECT u.username, p.id, p.public_id, p.user_id, p.title, p.content, p.view, p.created_at FROM users u INNER JOIN posts p ON u.id = p.user_id WHERE p.id = $1",
       [id]
     );
     res.send(posts.rows[0]);

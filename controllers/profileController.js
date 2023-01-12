@@ -10,7 +10,7 @@ module.exports.getProfile = async (req, res) => {
 
   if (token) {
     const profile = await pool.query(
-      "SELECT id, username, created_at from users WHERE id = $1",
+      "SELECT id, public_id, username, created_at from users WHERE id = $1",
       [user_id]
     );
     res.json(profile.rows[0]);
