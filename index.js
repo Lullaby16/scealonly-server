@@ -34,6 +34,9 @@ app.use(
     },
   })
 );
+app.use("/", (req, res) => {
+  res.json("Welcome to my server :heart:");
+});
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
