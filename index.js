@@ -5,6 +5,7 @@ const authRouter = require("./routers/authRouter");
 const postRouter = require("./routers/postRouter");
 const commentRouter = require("./routers/commentRouter");
 const profileRouter = require("./routers/profileRouter");
+const welcomeRouter = require("./routers/welcomeRouter");
 const session = require("express-session");
 require("dotenv").config();
 
@@ -34,9 +35,8 @@ app.use(
     },
   })
 );
-app.use("/", (req, res) => {
-  res.json("Welcome to my server :heart:");
-});
+
+app.use("/welcome", welcomeRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
