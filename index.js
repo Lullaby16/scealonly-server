@@ -16,8 +16,9 @@ const server = require("http").createServer(app);
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.FE_URL,
-    credentials: true,
+    //origin: process.env.FE_URL,
+    //credentials: true,
+    origin: true,
   })
 );
 app.use(express.json());
