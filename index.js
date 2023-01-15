@@ -18,7 +18,7 @@ app.use(
   cors({
     //origin: process.env.FE_URL,
     //credentials: true,
-    origin: true,
+    origin: "https://scealonly-server.up.railway.app",
     credentials: true,
   })
 );
