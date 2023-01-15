@@ -19,6 +19,7 @@ app.use(
     //origin: process.env.FE_URL,
     //credentials: true,
     origin: true,
+    credentials: true,
   })
 );
 app.use(express.json());
