@@ -73,7 +73,7 @@ module.exports.attemptRegister = async (req, res) => {
     try {
       //const uniqueString = uuidv4();
       const token = req.session.user.user_id;
-      const url = `${procces.env.BE_URL}/auth/verify/${token}`;
+      const url = `http://localhost:4000/auth/verify/${token}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -108,7 +108,7 @@ module.exports.verifyEmail = async (req, res) => {
   try {
     await pool.query("UPDATE users set verified = true WHERE id = $1", [id]);
 
-    res.redirect(`${proccess.env.FE_URL}/login`);
+    res.redirect(`http://localhost:3000/login`);
   } catch (error) {
     res.json({ error: error, status: "Your account has been verified" });
   }
