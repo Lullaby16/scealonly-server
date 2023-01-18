@@ -106,7 +106,6 @@ module.exports.updatePosts = async (req, res) => {
   const content = req.body.content;
   const post_id = req.body.post_id;
   const user_id = req.session.user.user_id;
-  //console.log(token);
 
   if (!token)
     return res.status(401).json({ loggedIn: false, status: "Not logged in!" });
@@ -116,7 +115,6 @@ module.exports.updatePosts = async (req, res) => {
       "UPDATE posts SET content = $1 WHERE id = $2 AND user_id = $3",
       [content, post_id, user_id]
     );
-    console.log("berhasil");
     return res.status(200).send("post has been viewed");
   } else {
     return res.status(422).json("Something went wrong");

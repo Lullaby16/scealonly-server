@@ -81,7 +81,6 @@ module.exports.updateComment = async (req, res) => {
       "UPDATE comments SET comment = $1 WHERE id = $2 AND user_id = $3",
       [comment, comment_id, user_id]
     );
-    console.log("berhasil");
     return res.status(200).send("post has been viewed");
   } else {
     return res.status(422).json("Something went wrong");

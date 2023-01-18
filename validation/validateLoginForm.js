@@ -17,14 +17,12 @@ const validateLoginForm = (req, res, next) => {
     .validate(formData)
     .then((valid) => {
       if (valid) {
-        console.log("form is good");
         return next();
       } else {
         return res.status(422).send("Something is wrong");
       }
     })
     .catch((err) => {
-      console.log(err);
       return res.status(422).send("Data is not valid");
     });
 };

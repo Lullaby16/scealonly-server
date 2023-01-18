@@ -11,14 +11,12 @@ const validatePost = (req, res, next) => {
     .validate(formPost)
     .then((valid) => {
       if (valid) {
-        console.log("form is good");
         return next();
       } else {
         return res.status(422).send("Something is wrong");
       }
     })
     .catch((err) => {
-      console.log(err);
       return res.status(422).send("Data is not valid");
     });
 };
